@@ -1,0 +1,19 @@
+--- src/components/FloatingNavbar.tsx
++++ src/components/FloatingNavbar.tsx
+@@ -107,3 +107,3 @@
+         {/* Logo */}
+-        <div
++        <div className="flex items-center space-x-3 cursor-pointer group shrink-0 mr-2 lg:mr-4 pl-2 lg:flex-1"
+           onClick={() => onNavigateSection?.('hero')}
+-          className="flex items-center space-x-3 cursor-pointer group shrink-0 mr-2 lg:mr-4 pl-2"
+         >
+@@ -124,3 +124,3 @@
+         {/* Navigation Middle Links */}
+-        <div className="hidden lg:flex items-center space-x-1.5">
++        <div className="hidden lg:flex items-center justify-center space-x-1.5 flex-none">
+           {navLinks.map((link) => {
+@@ -163,3 +163,3 @@
+         {/* Right side controls: Language, Auth, Dark Mode */}
+-        <div className="flex items-center space-x-1.5 shrink-0 ml-2 lg:ml-4">
++        <div className="flex items-center justify-end space-x-1.5 shrink-0 ml-2 lg:ml-4 lg:flex-1">
+           {/* Prominent & Cohesive Dashboard Pill Button */}

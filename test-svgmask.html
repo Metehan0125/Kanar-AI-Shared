@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+.donut-bg {
+  width: 240px;
+  height: 240px;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, red -2%, red 48%, blue 52%, blue 78%, green 82%, green 98%, red 102%);
+  -webkit-mask: url(#m);
+  mask: url(#m);
+}
+</style>
+</head>
+<body>
+<div style="position: relative; width: 240px; height: 240px;">
+  <div class="donut-bg" style="position: absolute; inset: 0;"></div>
+  <svg style="position: absolute; inset: 0; width: 100%; height: 100%;" viewBox="0 0 240 240">
+    <defs>
+      <mask id="m">
+        <circle cx="120" cy="120" r="96" fill="none" stroke="white" stroke-width="24" stroke-dasharray="300 600" transform="rotate(-90 120 120)" />
+      </mask>
+    </defs>
+  </svg>
+</div>
+</body>
+</html>

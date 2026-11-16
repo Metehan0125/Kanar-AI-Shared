@@ -1,0 +1,1 @@
+sed -i 's/time += 0.0025;/const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;\n      time += prefersReduced ? 0.0002 : 0.0025;/g' src/components/landing/GlassDNADataStructure.tsx

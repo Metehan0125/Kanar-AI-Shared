@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<body>
+<svg width="260" height="260" viewBox="0 0 260 260" style="transform: rotate(-90deg); background: #f0f0f0;">
+  <!-- background track -->
+  <circle cx="130" cy="130" r="90" fill="none" stroke="#ddd" stroke-width="20" />
+  
+  <script>
+    const data = [ {p: 40, c: 'red'}, {p: 30, c: 'blue'}, {p: 20, c: 'green'}, {p: 10, c: 'orange'} ];
+    const r = 90;
+    const c = 2 * Math.PI * r;
+    const strokeWidth = 20;
+    const gap = 10;
+    const capPadding = strokeWidth; // for round caps
+
+    let currentOffset = 0;
+    data.forEach(d => {
+      const percent = d.p / 100;
+      let segLen = (percent * c) - gap - capPadding;
+      if (segLen < 0.1) segLen = 0.1;
+      
+      const start = currentOffset + (capPadding / 2) + (gap / 2);
+      
+      document.write(`
+        <circle cx="130" cy="130" r="${r}" fill="none" stroke="${d.c}" 
+          stroke-width="${strokeWidth}" stroke-linecap="round"
+          stroke-dasharray="${segLen} ${c}" stroke-dashoffset="${-start}" />
+      `);
+      currentOffset += (percent * c);
+    });
+  </script>
+</svg>
+</body>
+</html>

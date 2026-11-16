@@ -1,0 +1,146 @@
+--- src/components/FloatingNavbar.tsx
++++ src/components/FloatingNavbar.tsx
+@@ -1,5 +1,6 @@
+ import React, { useState, useEffect } from 'react';
++import { motion, AnimatePresence } from 'motion/react';
+ import { NotificationBell } from './NotificationBell';
+ import { ThemeToggle } from './ThemeToggle';
+ import { RotatingDashboardIcon } from './RotatingDashboardIcon';
+@@ -29,6 +30,17 @@
+   const isTR = lang === 'TR';
+   const [dashBtnHover, setDashBtnHover] = useState(false);
++  const [scrolled, setScrolled] = useState(false);
++
++  useEffect(() => {
++    const handleScroll = () => {
++      setScrolled(window.scrollY > 20);
++    };
++    window.addEventListener('scroll', handleScroll, { passive: true });
++    return () => window.removeEventListener('scroll', handleScroll);
++  }, []);
+ 
+   const navLinks = [
+@@ -62,11 +74,27 @@
+   ];
+ 
+   return (
+-    <div className="sticky top-0 z-50 w-full bg-white/90 dark:bg-slate-950/90 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800 shadow-sm transition-all">
+-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-2">
++    <div className="fixed top-0 left-0 right-0 z-50 flex justify-center px-4 pointer-events-none transition-all duration-300" style={{ marginTop: scrolled ? '12px' : '24px' }}>
++      <motion.div 
++        initial={{ y: -50, opacity: 0 }}
++        animate={{ y: 0, opacity: 1 }}
++        transition={{ type: 'spring', stiffness: 300, damping: 30 }}
++        className={`pointer-events-auto w-full max-w-[1500px] flex items-center justify-between px-6 transition-all duration-500 ease-out border shadow-[0_20px_60px_rgba(0,0,0,0.08)] ${
++          scrolled 
++            ? 'h-[64px] rounded-[30px] bg-white/85 dark:bg-[#0A0A0C]/85 backdrop-blur-[30px] border-white/60 dark:border-white/15'
++            : 'h-[76px] rounded-[36px] bg-white/72 dark:bg-[#0A0A0C]/72 backdrop-blur-[22px] border-white/45 dark:border-white/10'
++        }`}
++      >
+         {/* Logo */}
+         <div
+           onClick={() => onNavigateSection?.('hero')}
+-          className="flex items-center space-x-2.5 cursor-pointer group shrink-0"
++          className="flex items-center space-x-3 cursor-pointer group shrink-0 mr-4"
+         >
+-          <div className="w-8.5 h-8.5 rounded-xl bg-gradient-to-tr from-lime-400 via-emerald-500 to-teal-600 flex items-center justify-center text-slate-950 font-black text-sm shadow-md group-hover:scale-105 transition-transform">
++          <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-lime-400 via-emerald-500 to-teal-600 flex items-center justify-center text-slate-950 font-black text-sm shadow-md group-hover:scale-105 transition-transform">
+             K
+           </div>
+-          <div className="flex items-center gap-1.5">
+-            <span className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 dark:text-white leading-none">
++          <div className="flex items-center gap-2">
++            <span className="text-xl sm:text-[22px] font-black tracking-tight text-slate-900 dark:text-white leading-none">
+               Kanar
+             </span>
+             <span className="font-mono text-xs font-black bg-gradient-to-r from-emerald-400 via-teal-300 to-lime-300 text-slate-950 px-2 py-0.5 rounded-lg shadow-xs border border-emerald-300/60 uppercase tracking-widest leading-none flex items-center justify-center">
+@@ -87,7 +115,7 @@
+                   }
+                 }}
+-                className={`group relative inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer border ${
++                className={`group relative inline-flex items-center gap-2 px-4 py-2 rounded-2xl text-[13px] font-bold transition-all cursor-pointer border ${
+                   isActive
+-                    ? `${link.activeBg} font-extrabold shadow-2xs`
+-                    : `border-transparent text-slate-600 dark:text-slate-300 hover:bg-slate-100/90 dark:hover:bg-slate-800/80 ${link.borderColor} hover:shadow-2xs hover:scale-[1.03] active:scale-[0.97]`
++                    ? `${link.activeBg} font-extrabold shadow-sm`
++                    : `border-transparent text-slate-600 dark:text-slate-300 hover:bg-white/60 dark:hover:bg-slate-800/50 ${link.borderColor} hover:shadow-sm hover:-translate-y-0.5 active:translate-y-0`
+                 }`}
+               >
+                 <IconComp
+-                  className={`w-3.5 h-3.5 ${link.iconColor} ${link.iconAnimation} transition-transform duration-300`}
++                  className={`w-4 h-4 ${link.iconColor} ${link.iconAnimation} transition-transform duration-300`}
+                 />
+                 <span
+                   className={`transition-all duration-300 ${
+@@ -107,18 +135,18 @@
+         {/* Right side controls: Language, Auth, Dark Mode */}
+-        <div className="flex items-center space-x-2 shrink-0">
++        <div className="flex items-center space-x-2.5 shrink-0 ml-4">
+           {/* Prominent & Cohesive Dashboard Pill Button */}
+           <button
+             onClick={onGoToDashboard}
+             onMouseEnter={() => setDashBtnHover(true)}
+             onMouseLeave={() => setDashBtnHover(false)}
+-            className="group relative inline-flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-extrabold transition-all cursor-pointer shadow-sm border border-emerald-500/30 dark:border-emerald-400/30 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-500 text-white hover:shadow-emerald-500/20 hover:scale-[1.02] active:scale-[0.98]"
++            className="group relative inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-full text-xs sm:text-[13px] font-extrabold transition-all cursor-pointer shadow-sm border border-emerald-500/40 dark:border-emerald-400/30 bg-gradient-to-r from-emerald-600 via-teal-600 to-emerald-700 hover:from-emerald-500 hover:to-teal-500 text-white hover:shadow-emerald-500/30 hover:-translate-y-0.5 active:translate-y-0"
+           >
+-            <RotatingDashboardIcon isHovered={dashBtnHover} className="w-4 h-4 text-white group-hover:scale-110 transition-transform" />
++            <RotatingDashboardIcon isHovered={dashBtnHover} className="w-4 h-4 text-white group-hover:rotate-12 group-hover:scale-110 transition-transform duration-300" />
+             <span className="tracking-wide group-hover:tracking-wider group-hover:bg-gradient-to-r group-hover:from-lime-300 group-hover:to-emerald-100 group-hover:bg-clip-text group-hover:text-transparent transition-all duration-300 font-black">
+               {isTR ? 'Dashboard' : 'Dashboard'}
+             </span>
+           </button>
+ 
+           {/* Language Switcher Button (TR / EN) */}
+           <button
+             onClick={() => setLang(isTR ? 'EN' : 'TR')}
+-            className="flex items-center gap-1 px-2.5 py-2 text-xs font-bold rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700 transition-all cursor-pointer"
++            className="flex items-center gap-1.5 px-3 py-2 text-[13px] font-bold rounded-2xl border border-white/60 dark:border-white/10 bg-white/40 dark:bg-slate-800/40 text-slate-700 dark:text-slate-200 hover:bg-white/80 dark:hover:bg-slate-700/80 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer shadow-sm"
+             title={isTR ? 'Switch to English' : 'Türkçe\'ye Geç'}
+           >
+-            <Globe className="w-3.5 h-3.5 text-emerald-500" />
++            <Globe className="w-4 h-4 text-emerald-500" />
+             <span className="text-xs">{isTR ? 'TR' : 'EN'}</span>
+           </button>
+ 
+@@ -131,7 +159,7 @@
+               <button
+                 onClick={onLogout}
+-                className="p-2 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-500 hover:text-rose-600 dark:hover:text-rose-400 transition-all cursor-pointer"
++                className="p-2 rounded-2xl border border-white/60 dark:border-white/10 bg-white/40 dark:bg-slate-800/40 text-slate-500 hover:text-rose-600 dark:hover:text-rose-400 hover:-translate-y-0.5 active:translate-y-0 transition-all cursor-pointer shadow-sm"
+                 title={isTR ? 'Çıkış Yap' : 'Sign Out'}
+               >
+-                <LogOut className="w-3.5 h-3.5" />
++                <LogOut className="w-4 h-4" />
+               </button>
+             </div>
+           ) : (
+             <button
+               onClick={onOpenAuth}
+-              className="px-3.5 py-2 bg-slate-900 dark:bg-white hover:bg-slate-800 dark:hover:bg-slate-100 text-white dark:text-slate-950 font-black text-xs rounded-xl shadow-xs transition-all flex items-center gap-1.5 cursor-pointer"
++              className="px-4 py-2 bg-slate-900 dark:bg-white hover:bg-slate-800 dark:hover:bg-slate-100 text-white dark:text-slate-950 font-black text-[13px] rounded-2xl shadow-sm hover:-translate-y-0.5 active:translate-y-0 transition-all flex items-center gap-1.5 cursor-pointer"
+             >
+               <span>{isTR ? 'Giriş Yap' : 'Sign In'}</span>
+-              <ArrowRight className="w-3.5 h-3.5" />
++              <ArrowRight className="w-4 h-4" />
+             </button>
+           )}
+ 
+           {/* Notification Bell */}
+-          <NotificationBell isTR={isTR} />
++          <div className="hover:-translate-y-0.5 active:translate-y-0 transition-transform">
++            <NotificationBell isTR={isTR} />
++          </div>
+ 
+           {/* Theme Toggle */}
+-          <ThemeToggle darkMode={darkMode} setDarkMode={setDarkMode} isTR={isTR} />
++          <div className="hover:-translate-y-0.5 active:translate-y-0 transition-transform">
++            <ThemeToggle darkMode={darkMode} setDarkMode={setDarkMode} isTR={isTR} />
++          </div>
+         </div>
+-      </div>
+-    </div>
++      </motion.div>
++    </div>
+   );
+ };

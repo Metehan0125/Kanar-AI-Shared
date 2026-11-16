@@ -1,0 +1,6 @@
+{
+  "name": "KanarAI",
+  "description": "KanarAI - TEFAS Fon Analiz, Akıllı Portföy Yönetimi ve Yapay Zeka Finans Asistanı",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
